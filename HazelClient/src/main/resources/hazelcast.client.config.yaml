@@ -1,0 +1,7 @@
+hazelcast-client:
+  cluster-name: spring-session-cluster
+  network:
+    cluster-members:
+      - localhost:8888
+
+

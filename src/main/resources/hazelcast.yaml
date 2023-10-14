@@ -1,0 +1,19 @@
+hazelcast:
+  cluster-name: spring-session-cluster
+  network:
+    port:
+      auto-increment: false
+      port: 8888
+      port-count: 1
+
+  user-code-deployment:
+    enabled: true
+
+
+
+
+
+
+
+
+
