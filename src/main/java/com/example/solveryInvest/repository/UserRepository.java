@@ -1,19 +1,15 @@
 package com.example.solveryInvest.repository;
 
-import com.example.solveryInvest.dto.UserDto;
 import com.example.solveryInvest.entity.User;
 import com.example.solveryInvest.entity.enums.Role;
-import jooq.tables._User;
-import jooq.tables.records._UserRecord;
 import lombok.RequiredArgsConstructor;
-import org.jooq.*;
+import org.jooq.DSLContext;
+import org.jooq.SQLDialect;
 import org.jooq.impl.DSL;
 import org.jooq.impl.EnumConverter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;

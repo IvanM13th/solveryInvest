@@ -3,16 +3,12 @@ package com.example.solveryInvest.service.authService;
 import com.example.solveryInvest.dto.UserDto;
 import com.example.solveryInvest.entity.auth.AuthenticationResponse;
 import com.example.solveryInvest.exception.AlreadyExistsException;
-import com.example.solveryInvest.service.encoderService.PasswordEncoderService;
-import com.example.solveryInvest.service.userService.UserService;
 import com.example.solveryInvest.security.JwtService;
-import jakarta.annotation.PostConstruct;
+import com.example.solveryInvest.service.userService.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
-
-import static com.example.solveryInvest.service.encoderService.PasswordEncoderService.passwordEncoder;
 
 @Service("auth-service")
 @RequiredArgsConstructor

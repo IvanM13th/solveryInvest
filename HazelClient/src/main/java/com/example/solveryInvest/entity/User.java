@@ -1,7 +1,9 @@
 package com.example.solveryInvest.entity;
 
 import com.example.solveryInvest.entity.enums.Role;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,17 +17,13 @@ import java.util.Collection;
 import java.util.List;
 
 @Data
-@Entity
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "_user")
 public class User implements UserDetails, Serializable {
 
     private static final long serialVersionUID = 6529685098267757690L;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
     private String firstName;
