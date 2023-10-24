@@ -18,7 +18,7 @@
 
         <target>
             <packageName>jooq</packageName>
-            <directory>C:\projects\solveryInvest\src\main\java\com\example\solveryInvest\</directory>
+            <directory>com.example.solveryInves</directory>
         </target>
     </generator>
 </configuration>
