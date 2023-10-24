@@ -5,13 +5,16 @@ import com.example.solveryInvest.entity.auth.AuthenticationResponse;
 import com.example.solveryInvest.exception.AlreadyExistsException;
 import com.example.solveryInvest.security.JwtService;
 import com.example.solveryInvest.service.userService.UserService;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
 
 @Service("auth-service")
 @RequiredArgsConstructor
+@Slf4j
 public class AuthServiceImpl implements AuthService {
 
     private final UserService userService;
@@ -30,11 +33,13 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public AuthenticationResponse authenticate(UserDto userDto) {
+
         authManager.authenticate(
                 new UsernamePasswordAuthenticationToken(userDto.getEmail(), userDto.getPassword())
         );
         var user = userService.findUserByEmail(userDto.getEmail());
         var jwtToken = jwtService.generateToken(user);
+        log.info("User {} with email {} is authenticated", userDto.getFirstName(), userDto.getEmail());
         return AuthenticationResponse.builder().token(jwtToken).build();
     }
 
