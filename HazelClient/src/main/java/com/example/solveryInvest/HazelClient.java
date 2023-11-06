@@ -36,9 +36,7 @@ public class HazelClient {
                 serializerConfig.setImplementation(new HazelcastSessionSerializer()).setTypeClass(MapSession.class);
                 config.getSerializationConfig().addSerializerConfig(serializerConfig);
                 config.getUserCodeDeploymentConfig().setEnabled(true)
-                        .addClass(Session.class)
                         .addClass(MapSession.class)
-                        .addClass(PrincipalNameExtractor.class.getName())
                         .addClass(SessionUpdateEntryProcessor.class);
             } catch (IOException e) {
                 log.info(e.getMessage());
@@ -46,4 +44,10 @@ public class HazelClient {
         }
         return HazelcastClient.newHazelcastClient(config);
     }
+
+/*
+    public SessionUpdateEntryProcessor sessionUpdateEntryProcessor() {
+        var q = new SessionUpdateEntryProcessor();
+        return new SessionUpdateEntryProcessor();
+    }*/
 }

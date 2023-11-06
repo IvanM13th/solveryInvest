@@ -53,7 +53,7 @@ public class SessionConfiguration {
             sessionRepository.setFlushMode(FlushMode.IMMEDIATE);
             sessionRepository.setSaveMode(SaveMode.ALWAYS);
             sessionRepository.setSessionMapName(HazelcastIndexedSessionRepository.DEFAULT_SESSION_MAP_NAME);
-            sessionRepository.setDefaultMaxInactiveInterval(Duration.ofSeconds(60));
+            sessionRepository.setDefaultMaxInactiveInterval(Duration.ofSeconds(120));
         });
     }
 }
