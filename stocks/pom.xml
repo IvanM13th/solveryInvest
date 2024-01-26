@@ -12,7 +12,7 @@
     <groupId>solveryInvest</groupId>
     <artifactId>stocks</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>stocks</name>
+    <name>Stocks</name>
     <description>stocks</description>
 
     <properties>

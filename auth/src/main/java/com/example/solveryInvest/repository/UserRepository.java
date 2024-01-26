@@ -2,7 +2,9 @@ package com.example.solveryInvest.repository;
 
 import com.example.solveryInvest.entity.User;
 import com.example.solveryInvest.entity.enums.Role;
+import com.example.solveryInvest.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.jooq.DSLContext;
 import org.jooq.SQLDialect;
 import org.jooq.impl.DSL;
@@ -20,6 +22,7 @@ import static jooq.tables._User._USER;
 
 @Repository
 @RequiredArgsConstructor
+@Slf4j
 public class UserRepository {
 
     private Connection connection;
@@ -56,6 +59,28 @@ public class UserRepository {
         return Optional.empty();
     }
 
+    public Optional<User> findById(Long id) {
+        try {
+            DSLContext context = DSL.using(getConnection(), SQLDialect.POSTGRES);
+            jooq.tables.records._UserRecord userRecord = context.fetchOne(_USER, _USER.ID.eq(id));
+            if (Objects.nonNull(userRecord)) {
+                var user = User.builder()
+                        .id(userRecord.getValue(_USER.ID))
+                        .firstName(userRecord.getValue(_USER.FIRST_NAME))
+                        .lastName(userRecord.getValue(_USER.LAST_NAME))
+                        .email(userRecord.getValue(_USER.EMAIL))
+                        .role(roleConverter.from(userRecord.getValue(_USER.ROLE)))
+                        .password(userRecord.getValue(_USER.PASSWORD))
+                        .build();
+                return Optional.of(user);
+            }
+        } catch (Exception e) {
+            log.info(e.getMessage());
+            log.info(String.format("error trying to fetch user with id %s", id));
+        }
+        return Optional.empty();
+    }
+
     public Optional<User> findByEmail(String email) {
         try {
             DSLContext context = DSL.using(getConnection(), SQLDialect.POSTGRES);
@@ -72,7 +97,8 @@ public class UserRepository {
                 return Optional.of(user);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            log.info(e.getMessage());
+            log.info(String.format("error trying to fetch user with email %s", email));
         }
         return Optional.empty();
     }
@@ -90,7 +116,8 @@ public class UserRepository {
             var id = userRecord.get(_USER.ID);
             user.setId(id);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.info(e.getMessage());
+            log.info(String.format("error trying to save user with email %s", user.getEmail()));
         }
         return user;
     }

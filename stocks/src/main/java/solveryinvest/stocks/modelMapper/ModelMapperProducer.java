@@ -1,12 +1,12 @@
-package com.example.solveryInvest.modelMapper;
+package solveryinvest.stocks.modelMapper;
 
-import com.example.solveryInvest.dto.UserDto;
-import com.example.solveryInvest.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import solveryinvest.stocks.dto.BalanceDto;
+import solveryinvest.stocks.entity.Balance;
 
 
 @Configuration("model_mapper_producer")
@@ -18,10 +18,7 @@ public class ModelMapperProducer {
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         modelMapper.getConfiguration().setSkipNullEnabled(true);
-        modelMapper.typeMap(UserDto.class, User.class);
-
-        modelMapper.typeMap(User.class, UserDto.class)
-                .addMappings(mapper -> mapper.skip(UserDto::setPassword));
+        modelMapper.typeMap(Balance.class, BalanceDto.class);
         return modelMapper;
     }
 }

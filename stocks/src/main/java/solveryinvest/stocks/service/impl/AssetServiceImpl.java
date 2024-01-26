@@ -1,4 +1,4 @@
-package solveryinvest.stocks.service;
+package solveryinvest.stocks.service.impl;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -21,6 +21,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import solveryinvest.stocks.entity.Asset;
 import solveryinvest.stocks.repository.AssetsRepository;
+import solveryinvest.stocks.service.AssetService;
 
 import java.util.ArrayList;
 import java.util.HashSet;

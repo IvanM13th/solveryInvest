@@ -7,6 +7,8 @@ public interface UserService {
 
     UserDto findByEmail(String email);
 
+    UserDto findById(Long id);
+
     boolean emailExists(String email);
 
     User findUserByEmail(String email);

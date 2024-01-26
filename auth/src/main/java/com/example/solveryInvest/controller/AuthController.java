@@ -1,5 +1,6 @@
 package com.example.solveryInvest.controller;
 
+import com.example.solveryInvest.dto.AuthDto;
 import com.example.solveryInvest.dto.UserDto;
 import com.example.solveryInvest.entity.auth.AuthenticationResponse;
 import com.example.solveryInvest.service.authService.AuthService;
@@ -27,7 +28,7 @@ public class AuthController {
     }
 
     @PostMapping("/authenticate")
-    public CompletableFuture<ResponseEntity<AuthenticationResponse>> authenticate (@RequestBody UserDto userDto) {
+    public CompletableFuture<ResponseEntity<AuthDto>> authenticate (@RequestBody UserDto userDto) {
         return CompletableFuture.supplyAsync(() -> authService.authenticate(userDto))
                 .thenApply(ResponseEntity::ok);
     }

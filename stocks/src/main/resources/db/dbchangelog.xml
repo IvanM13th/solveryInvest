@@ -10,4 +10,5 @@
 		http://www.liquibase.org/xml/ns/pro https://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd">
     <include file="scripts/001_ddl_create_asset_table.sql" relativeToChangelogFile="true"/>
     <include file="scripts/002_ddl_create_client_portfolio_tables.sql" relativeToChangelogFile="true"/>
+    <include file="scripts/004_ddl_create_balance_tables.sql" relativeToChangelogFile="true"/>
 </databaseChangeLog>

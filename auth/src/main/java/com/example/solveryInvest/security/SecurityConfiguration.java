@@ -25,6 +25,8 @@ public class SecurityConfiguration {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
+                        //TODO позже убрать эту строку
+                        .requestMatchers("/api/v1/user/**").permitAll()
                         .requestMatchers("/api/v1/auth/**").permitAll()
                         .requestMatchers("/api/v1/permit").hasAuthority("GUEST")
                         .anyRequest().authenticated()

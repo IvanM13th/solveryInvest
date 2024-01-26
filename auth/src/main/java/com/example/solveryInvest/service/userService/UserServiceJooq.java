@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import static com.example.solveryInvest.service.encoderService.PasswordEncoderService.passwordEncoder;
 
@@ -25,6 +26,14 @@ public class UserServiceJooq implements UserService {
     public UserDto findByEmail(String email) {
         var user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new NotFoundException(String.format("User with email %s not found", email)));
+        return modelMapper.map(user, UserDto.class);
+    }
+
+    @Override
+    @Transactional
+    public UserDto findById(Long id) {
+        var user = userRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException(String.format("User with id %s not found", id)));
         return modelMapper.map(user, UserDto.class);
     }
 

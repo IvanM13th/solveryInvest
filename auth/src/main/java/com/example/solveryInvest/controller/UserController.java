@@ -24,4 +24,9 @@ public class UserController {
                 .thenApply(ResponseEntity::ok);
     }
 
+    @GetMapping("/id")
+    public CompletableFuture<ResponseEntity<UserDto>> findById(@RequestParam Long id) {
+        return CompletableFuture.supplyAsync(() -> userService.findById(id))
+                .thenApply(ResponseEntity::ok);
+    }
 }
