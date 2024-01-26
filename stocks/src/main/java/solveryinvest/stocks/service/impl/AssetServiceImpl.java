@@ -1,33 +1,37 @@
 package solveryinvest.stocks.service.impl;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.annotation.PostConstruct;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections4.MultiValuedMap;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.client.MultipartBodyBuilder;
-import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+import solveryinvest.stocks.dto.AssetDto;
+import solveryinvest.stocks.dto.PageDto;
+import solveryinvest.stocks.dto.TCS.AssetsDto;
+import solveryinvest.stocks.dto.TCS.InstrumentDto;
+import solveryinvest.stocks.dto.TCS.LastPriceDto;
+import solveryinvest.stocks.dto.TCS.LastPrices;
 import solveryinvest.stocks.entity.Asset;
+import solveryinvest.stocks.filters.FilterList;
+import solveryinvest.stocks.filters.SortFields;
+import solveryinvest.stocks.filters.SortType;
 import solveryinvest.stocks.repository.AssetsRepository;
 import solveryinvest.stocks.service.AssetService;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
+
+import static solveryinvest.stocks.filters.AssetFilter.getSpecificationFromFilters;
+import static solveryinvest.stocks.filters.FilterUtils.getSort;
 
 @Service
 @Slf4j
@@ -38,6 +42,10 @@ public class AssetServiceImpl implements AssetService {
 
     private final AssetsRepository assetsRepository;
 
+    private final RestTemplate restTemplate;
+
+    private final ModelMapper modelMapper;
+
     @Value("${t.get.all}")
     private String url_getAll;
 
@@ -47,11 +55,15 @@ public class AssetServiceImpl implements AssetService {
     @Value("${t.status.base}")
     private String statusBase;
 
-    @PostConstruct
+    @Value("${t.get.last.price}")
+    private String lastPriceUrl;
+
+    private final Map<String, SortFields> sortFields = Map.of("name", SortFields.name,
+            "id", SortFields.id);
+
     @Transactional
-    void getAssets() {
+    public void getAssetsWhenAppStarts() {
         if (assetsRepository.findAll().isEmpty()) {
-            RestTemplate restTemplate = new RestTemplate();
             HttpHeaders headers = new HttpHeaders();
             headers.add("Authorization", String.format("Bearer %s", token));
             headers.setContentType(MediaType.APPLICATION_JSON);
@@ -61,7 +73,7 @@ public class AssetServiceImpl implements AssetService {
             try {
                 ResponseEntity<String> response = restTemplate.postForEntity(url_getAll, request, String.class);
                 if (Objects.nonNull(response.getBody())) {
-                    var assets = mapper.readValue(response.getBody(), Instruments.class).getInstruments();
+                    var assets = mapper.readValue(response.getBody(), AssetsDto.class).getInstruments();
                     assetsRepository.saveAll(assets);
                 }
             } catch (Exception e) {
@@ -70,10 +82,41 @@ public class AssetServiceImpl implements AssetService {
         }
     }
 
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    private static class Instruments {
-        private List<Asset> instruments;
+    @Override
+    @Transactional
+    public PageDto<AssetDto> findAllByFilters(List<FilterList> filters, Integer page, Integer pageSize, String field, SortType direction) {
+        final var pageable = getSort(page, pageSize, direction, () -> String.valueOf(sortFields.getOrDefault(field, SortFields.name)));
+        if (Objects.isNull(filters)) filters = new ArrayList<>();
+        final var spec = getSpecificationFromFilters(filters);
+        final var assets = assetsRepository.findAll(spec, pageable);
+        var figi = assets.stream().map(Asset::getFigi).toList();
+        var priceMap = getLastPrices(figi);
+        List<AssetDto> assetsDto = new ArrayList<>();
+        assets.forEach(asset -> {
+            var dto = modelMapper.map(asset, AssetDto.class);
+            dto.setLastPrice(priceMap.getOrDefault(dto.getFigi(), ""));
+            assetsDto.add(dto);
+        });
+        return PageDto.<AssetDto>builder()
+                .totalPages((long) assets.getTotalPages())
+                .totalElements(assets.getTotalElements())
+                .hasNext(assets.hasNext())
+                .content(assetsDto)
+                .build();
+    }
+
+    private Map<String, String> getLastPrices(List<String> figi) {
+        var instr = InstrumentDto.builder().instrumentId(figi).build();
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", String.format("Bearer %s", token));
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<InstrumentDto> request = new HttpEntity<>(instr, headers);
+        LastPrices response = restTemplate.postForObject(lastPriceUrl, request, LastPrices.class);
+        Map<String, String> priceMap = new HashMap<>();
+        if (Objects.nonNull(response) && Objects.nonNull(response.getLastPrices())) {
+            priceMap = response.getLastPrices().stream()
+                    .collect(Collectors.toMap(LastPriceDto::getFigi, lastPriceDto -> lastPriceDto.getPrice().getUnits()));
+        }
+        return priceMap;
     }
 }

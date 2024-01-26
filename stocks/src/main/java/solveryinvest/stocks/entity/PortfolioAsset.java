@@ -7,21 +7,31 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.OffsetDateTime;
-
 @Data
 @Entity
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Portfolio {
+public class PortfolioAsset {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
-    private Long userId;
+    @Column(name = "portfolio_id")
+    private Long portfolioId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "portfolio_id", insertable = false, updatable = false)
+    private Portfolio portfolio;
 
-    private String portfolioName;
+    @Column(name = "asset_id")
+    private Long assetId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "asset_id", insertable = false, updatable = false)
+    private Asset asset;
+
+    private Long lots;
+
+    private Long amount;
 }

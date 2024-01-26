@@ -22,7 +22,7 @@ public class Asset {
 
     private String figi;
     protected String ticker;
-    private Integer lot;
+    private Long lot;
     @Enumerated(EnumType.STRING)
     private Currency currency;
     private String name;
