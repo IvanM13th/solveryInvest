@@ -1,27 +1,26 @@
-package com.example.solveryInvest;
+package solveryinvest.stocks.hazelcast;
 
 import com.hazelcast.client.HazelcastClient;
-import com.hazelcast.client.config.ClientConfig;
 import com.hazelcast.client.config.YamlClientConfigBuilder;
-import com.hazelcast.config.SerializerConfig;
+import com.hazelcast.config.*;
 import com.hazelcast.core.HazelcastInstance;
-import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.session.MapSession;
-import org.springframework.session.Session;
+import org.springframework.session.hazelcast.HazelcastIndexedSessionRepository;
 import org.springframework.session.hazelcast.HazelcastSessionSerializer;
 import org.springframework.session.hazelcast.PrincipalNameExtractor;
 import org.springframework.session.hazelcast.SessionUpdateEntryProcessor;
 import org.springframework.session.hazelcast.config.annotation.SpringSessionHazelcastInstance;
-import org.springframework.stereotype.Service;
+import solveryinvest.stocks.entity.User;
 
 import java.io.IOException;
 import java.util.Objects;
 
-@Service("hz-client")
+@Configuration
 @Slf4j
-public class HazelClient {
+public class HazelcastClientInstance {
 
     @Bean
     @SpringSessionHazelcastInstance
@@ -31,7 +30,7 @@ public class HazelClient {
         if (Objects.nonNull(url)) {
             try {
                 var config = new YamlClientConfigBuilder(url).build();
-                config.setClassLoader(HazelClient.class.getClassLoader());
+                config.setClassLoader(HazelcastClientInstance.class.getClassLoader());
                 client = HazelcastClient.newHazelcastClient(config);
                 SerializerConfig serializerConfig = new SerializerConfig();
                 serializerConfig.setImplementation(new HazelcastSessionSerializer()).setTypeClass(MapSession.class);
@@ -45,4 +44,6 @@ public class HazelClient {
         }
         return client;
     }
+
+
 }

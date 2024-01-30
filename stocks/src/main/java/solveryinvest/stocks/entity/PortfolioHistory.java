@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import solveryinvest.stocks.enums.AssetOperationType;
 
+import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 
 @Data
@@ -41,5 +42,7 @@ public class PortfolioHistory {
 
     private Long lots;
 
-    private Long amount;
+    private Long volume;
+
+    private BigDecimal purchasePrice;
 }

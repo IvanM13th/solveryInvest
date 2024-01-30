@@ -27,6 +27,7 @@ import solveryinvest.stocks.filters.SortType;
 import solveryinvest.stocks.repository.AssetsRepository;
 import solveryinvest.stocks.service.AssetService;
 
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -89,12 +90,11 @@ public class AssetServiceImpl implements AssetService {
         if (Objects.isNull(filters)) filters = new ArrayList<>();
         final var spec = getSpecificationFromFilters(filters);
         final var assets = assetsRepository.findAll(spec, pageable);
-        var figi = assets.stream().map(Asset::getFigi).toList();
-        var priceMap = getLastPrices(figi);
+        var priceMap = getLastPrices(assets.stream().map(Asset::getFigi).toList());
         List<AssetDto> assetsDto = new ArrayList<>();
         assets.forEach(asset -> {
             var dto = modelMapper.map(asset, AssetDto.class);
-            dto.setLastPrice(priceMap.getOrDefault(dto.getFigi(), ""));
+            dto.setLastPrice(priceMap.getOrDefault(dto.getFigi(), BigDecimal.ZERO));
             assetsDto.add(dto);
         });
         return PageDto.<AssetDto>builder()
@@ -105,14 +105,14 @@ public class AssetServiceImpl implements AssetService {
                 .build();
     }
 
-    private Map<String, String> getLastPrices(List<String> figi) {
+    private Map<String, BigDecimal> getLastPrices(List<String> figi) {
         var instr = InstrumentDto.builder().instrumentId(figi).build();
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", String.format("Bearer %s", token));
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<InstrumentDto> request = new HttpEntity<>(instr, headers);
         LastPrices response = restTemplate.postForObject(lastPriceUrl, request, LastPrices.class);
-        Map<String, String> priceMap = new HashMap<>();
+        Map<String, BigDecimal> priceMap = new HashMap<>();
         if (Objects.nonNull(response) && Objects.nonNull(response.getLastPrices())) {
             priceMap = response.getLastPrices().stream()
                     .collect(Collectors.toMap(LastPriceDto::getFigi, lastPriceDto -> lastPriceDto.getPrice().getUnits()));

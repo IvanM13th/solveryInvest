@@ -8,12 +8,15 @@ import org.springframework.transaction.annotation.Transactional;
 import solveryinvest.stocks.dto.BalanceDto;
 import solveryinvest.stocks.entity.Balance;
 import solveryinvest.stocks.entity.BalanceHistory;
+import solveryinvest.stocks.entity.User;
 import solveryinvest.stocks.enums.OperationType;
+import solveryinvest.stocks.exception.AlreadyExistsException;
 import solveryinvest.stocks.exception.NotFoundException;
 import solveryinvest.stocks.repository.BalanceRepository;
 import solveryinvest.stocks.service.BalanceHistoryService;
 import solveryinvest.stocks.service.BalanceService;
 import solveryinvest.stocks.service.UserService;
+import solveryinvest.stocks.utils.BigDecimalsUtils;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
@@ -28,15 +31,17 @@ public class BalanceServiceImpl implements BalanceService {
 
     private final BalanceRepository br;
 
+    private final BigDecimalsUtils decimals;
+
     private final ModelMapper modelMapper;
 
     @Override
     @Transactional
-    public BalanceDto createBalance(Long userId) {
-        var user = userService.findById(userId);
-        validateUserBalance(userId);
+    public BalanceDto createBalance(User user) {
+        var userDto = userService.findById(user);
+        checkIfBalanceExists(user.getId());
         var balance = Balance.builder()
-                .user_id(userId)
+                .user_id(user.getId())
                 .balance(new BigDecimal(0))
                 .build();
         br.save(balance);
@@ -45,7 +50,7 @@ public class BalanceServiceImpl implements BalanceService {
 
     @Override
     @Transactional
-    public BalanceDto getBalance(Long userId) {
+    public BalanceDto getBalanceDto(Long userId) {
         var balance = br.findByUserId(userId)
                 .orElseThrow(() -> new NotFoundException(String.format("Balance for user with id %s not found", userId)));
         return modelMapper.map(balance, BalanceDto.class);
@@ -53,29 +58,41 @@ public class BalanceServiceImpl implements BalanceService {
 
     @Override
     @Transactional
-    public BalanceDto updateBalance(Long id, Double amount, OperationType type) {
-        var balance = br.findByUserId(id)
-                .orElseThrow(() -> new NotFoundException(String.format("Balance for user with id %s not found", id)));
-        if (type.equals(OperationType.DEPOSIT)) {
-            balance.setBalance(balance.getBalance().add(BigDecimal.valueOf(amount)));
-        } else {
-            balance.setBalance(balance.getBalance().subtract(BigDecimal.valueOf(amount)));
-        }
-        validateIfBalanceBelowZero(balance.getBalance());
+    public Balance getBalance(Long userId) {
+        return br.findByUserId(userId)
+                .orElseThrow(() -> new NotFoundException(String.format("Balance for user with id %s not found", userId)));
+    }
+
+    @Override
+    @Transactional
+    public BalanceDto updateBalance(Long id, BigDecimal amount, OperationType type) {
+        var balance = getBalance(id);
+        var newValue = getNewBalanceValue(balance.getBalance(), amount, type);
+        balance.setBalance(newValue);
+        decimals.validateBalance(balance.getBalance());
         bhr.save(BalanceHistory.builder()
-                .balance_id(balance.getId()).dateTime(OffsetDateTime.now()).amount(BigDecimal.valueOf(amount)).operationType(type)
+                .balance_id(balance.getId()).dateTime(OffsetDateTime.now()).amount(amount).operationType(type)
                 .build());
         return modelMapper.map(balance, BalanceDto.class);
     }
 
-    private void validateUserBalance(Long userId) {
-        var balance = br.findByUserId(userId);
-        if (balance.isPresent())
-            throw new NotFoundException(String.format("Balance for user with id %s already exists", userId));
+    @Override
+    public void checkSufficientBalance(Balance balance, BigDecimal volume) {
+        var result = decimals.subtract(balance.getBalance(), volume);
+        decimals.validateBalance(result);
     }
 
-    private void validateIfBalanceBelowZero(BigDecimal balance) {
-        var value = balance.compareTo(BigDecimal.ZERO);
-        if (value < 0) throw new NotFoundException("Not enough money");
+    private void checkIfBalanceExists(Long userId) {
+        var balance = br.findByUserId(userId);
+        if (balance.isPresent())
+            throw new AlreadyExistsException(String.format("Balance for user with id %s already exists", userId));
+    }
+
+    private BigDecimal getNewBalanceValue(BigDecimal value1, BigDecimal value2, OperationType operationType) {
+        if (operationType.equals(OperationType.DEPOSIT)) {
+            return decimals.add(value1, value2);
+        } else {
+            return decimals.subtract(value1, value2);
+        }
     }
 }

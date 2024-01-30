@@ -8,11 +8,11 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="solveryInvest" />
-        <module name="HazelClient" />
         <module name="stocks" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="HazelClient" target="17" />
       <module name="hzCleint" target="11" />
       <module name="security" target="11" />
     </bytecodeTargetLevel>

@@ -1,6 +1,5 @@
-package com.example.solveryInvest.entity;
+package solveryinvest.stocks.entity;
 
-import com.example.solveryInvest.entity.enums.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,32 +8,19 @@ import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import solveryinvest.stocks.enums.Role;
 
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 
 @Data
-@Entity
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "_user")
 public class User implements UserDetails, Serializable {
 
     private static final long serialVersionUID = 6529685098267757690L;
-
-    public User(Long id) {
-        super();
-    }
-    public User(Long userId, Role role) {
-        this.id = userId;
-        this.role = role;
-    }
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", unique = true, nullable = false)
     private Long id;
     private String firstName;
     private String lastName;
@@ -42,6 +28,17 @@ public class User implements UserDetails, Serializable {
     private String password;
     @Enumerated(EnumType.STRING)
     private Role role;
+    private String jwt;
+
+    public User(Long id) {
+        super();
+    }
+    public User(Long userId, Role role, String email, String jwt) {
+        this.id = userId;
+        this.role = role;
+        this.jwt = jwt;
+        this.email = email;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

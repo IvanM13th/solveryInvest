@@ -1,5 +1,7 @@
 hazelcast-client:
   cluster-name: auth-cluster
+  user-code-deployment:
+    enabled: true
   network:
     cluster-members:
       - localhost:8888

@@ -1,0 +1,1 @@
+alter table portfolio_asset rename column asset_operation_type to operation_type;

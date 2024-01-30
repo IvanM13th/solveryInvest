@@ -1,5 +1,5 @@
 hazelcast:
-  cluster-name: spring-session-cluster
+  cluster-name: auth-cluster
   network:
     port:
       auto-increment: false
@@ -8,6 +8,8 @@ hazelcast:
 
   user-code-deployment:
     enabled: true
+
+
 
 
 

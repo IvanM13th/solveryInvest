@@ -5,7 +5,6 @@
     <option name="originalFiles">
       <list>
         <option value="$PROJECT_DIR$/pom.xml" />
-        <option value="$PROJECT_DIR$/HazelClient/pom.xml" />
         <option value="$PROJECT_DIR$/security/pom.xml" />
         <option value="$PROJECT_DIR$/stocks/pom.xml" />
         <option value="$PROJECT_DIR$/auth/pom.xml" />

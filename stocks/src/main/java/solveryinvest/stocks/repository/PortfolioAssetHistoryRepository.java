@@ -2,8 +2,9 @@ package solveryinvest.stocks.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import solveryinvest.stocks.entity.PortfolioHistory;
+import solveryinvest.stocks.entity.PortfolioAssetHistory;
 
 @Repository
-public interface PortfolioHistoryRepository extends JpaRepository<PortfolioHistory, Long> {
+public interface PortfolioAssetHistoryRepository extends JpaRepository<PortfolioAssetHistory, Long> {
+
 }

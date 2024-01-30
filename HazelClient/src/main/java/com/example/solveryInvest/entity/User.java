@@ -1,9 +1,7 @@
 package com.example.solveryInvest.entity;
 
 import com.example.solveryInvest.entity.enums.Role;
-import jakarta.persistence.Column;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,13 +15,13 @@ import java.util.Collection;
 import java.util.List;
 
 @Data
-@Builder
 @NoArgsConstructor
-@AllArgsConstructor
 public class User implements UserDetails, Serializable {
 
     private static final long serialVersionUID = 6529685098267757690L;
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
     private String firstName;
@@ -33,9 +31,20 @@ public class User implements UserDetails, Serializable {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    public User(Long id) {
+        super();
+    }
+    public User(Long userId, Role role) {
+        this.id = userId;
+        this.role = role;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));
+    }
+    public Long getId() {
+        return id;
     }
 
     @Override

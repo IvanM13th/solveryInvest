@@ -6,6 +6,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import solveryinvest.stocks.enums.AssetOperationType;
+
+import java.math.BigDecimal;
+import java.time.OffsetDateTime;
 
 @Data
 @Entity
@@ -13,11 +17,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class PortfolioAsset {
+public class PortfolioAssetHistory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
+
+    private OffsetDateTime dateTime;
 
     @Column(name = "portfolio_id")
     private Long portfolioId;
@@ -33,5 +39,11 @@ public class PortfolioAsset {
 
     private Long lots;
 
-    private Long amount;
+    private BigDecimal volume;
+
+    private BigDecimal purchasePrice;
+
+    @Enumerated(EnumType.STRING)
+    private AssetOperationType operationType;
 }
+

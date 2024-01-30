@@ -16,9 +16,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class SecurityConfiguration {
 
-    private final JwtAuthFilter jwtAuthFilter;
-    private final AuthenticationProvider authProvider;
-
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -26,13 +23,9 @@ public class SecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         //TODO позже убрать эту строку
-                        .requestMatchers("/api/v1/user/**").hasAuthority("GUEST")
-                        .requestMatchers("/api/v1/permit").hasAuthority("GUEST")
-                        .requestMatchers("/api/v1/auth/**").permitAll()
-                )
-                .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
-                .authenticationProvider(authProvider)
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+                        .requestMatchers("/api/**").permitAll()
+                        .anyRequest().authenticated()
+                );
         return http.build();
     }
 }

@@ -1,9 +1,12 @@
 package com.example.solveryInvest.hazelcast;
 
+import com.example.solveryInvest.dto.HazelcastUserData;
+import com.example.solveryInvest.entity.User;
 import com.hazelcast.config.*;
 import com.hazelcast.core.Hazelcast;
 import com.hazelcast.core.HazelcastInstance;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.session.FlushMode;
@@ -13,22 +16,31 @@ import org.springframework.session.config.SessionRepositoryCustomizer;
 import org.springframework.session.hazelcast.HazelcastIndexedSessionRepository;
 import org.springframework.session.hazelcast.HazelcastSessionSerializer;
 import org.springframework.session.hazelcast.PrincipalNameExtractor;
+import org.springframework.session.hazelcast.SessionUpdateEntryProcessor;
+import org.springframework.session.hazelcast.config.annotation.web.http.EnableHazelcastHttpSession;
 
 import java.io.IOException;
 import java.time.Duration;
+import java.util.Map;
 import java.util.Objects;
 
 @Configuration
 @Slf4j
+@EnableHazelcastHttpSession
 public class SessionConfiguration {
+
+    @Value("${hazelcast.inactive.interval}")
+    private Integer inactiveInterval;
 
     @Bean
     public HazelcastInstance hazelcastInstance() {
-        Config config = null;
+        HazelcastInstance hzInstance = null;
         try {
             var url = getClass().getClassLoader().getResource("hazelcast.yaml");
             if (Objects.nonNull(url)) {
-                config = new YamlConfigBuilder(url).build();
+                var config = new YamlConfigBuilder(url).build();
+                config.setClassLoader(User.class.getClassLoader());
+                hzInstance = Hazelcast.newHazelcastInstance(config);
                 AttributeConfig attributeConfig = new AttributeConfig()
                         .setName(HazelcastIndexedSessionRepository.PRINCIPAL_NAME_ATTRIBUTE)
                         .setExtractorClassName(PrincipalNameExtractor.class.getName());
@@ -40,11 +52,15 @@ public class SessionConfiguration {
                 SerializerConfig serializerConfig = new SerializerConfig();
                 serializerConfig.setImplementation(new HazelcastSessionSerializer()).setTypeClass(MapSession.class);
                 config.getSerializationConfig().addSerializerConfig(serializerConfig);
+                var depl = config.getUserCodeDeploymentConfig();
+                depl.setEnabled(true)
+                        .setClassCacheMode(UserCodeDeploymentConfig.ClassCacheMode.ETERNAL)
+                        .setProviderMode(UserCodeDeploymentConfig.ProviderMode.LOCAL_AND_CACHED_CLASSES);
             }
         } catch (IOException e) {
             log.info(e.getMessage());
         }
-        return Hazelcast.newHazelcastInstance(config);
+        return hzInstance;
     }
 
     @Bean
@@ -53,7 +69,7 @@ public class SessionConfiguration {
             sessionRepository.setFlushMode(FlushMode.IMMEDIATE);
             sessionRepository.setSaveMode(SaveMode.ALWAYS);
             sessionRepository.setSessionMapName(HazelcastIndexedSessionRepository.DEFAULT_SESSION_MAP_NAME);
-            sessionRepository.setDefaultMaxInactiveInterval(Duration.ofSeconds(120));
+            sessionRepository.setDefaultMaxInactiveInterval(Duration.ofSeconds(inactiveInterval));
         });
     }
 }

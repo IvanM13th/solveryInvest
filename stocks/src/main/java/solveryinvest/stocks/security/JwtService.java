@@ -1,6 +1,6 @@
-package com.example.solveryInvest.security;
+package solveryinvest.stocks.security;
 
-import com.example.solveryInvest.entity.User;
+
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
@@ -15,15 +15,16 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
+import solveryinvest.stocks.entity.User;
+import solveryinvest.stocks.enums.Role;
 
 import java.security.Key;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
-@Component("jwt-s")
+@Component("jwt-service")
 @RequiredArgsConstructor
 public class JwtService {
 
@@ -38,34 +39,41 @@ public class JwtService {
         var key = Keys.hmacShaKeyFor(keyBytes);
         jwtParser = Jwts.parserBuilder().setSigningKey(key).build();
     }
-    public String getEmail(String token) {
-        return extractClaim(token, Claims::getSubject);
+
+    public Authentication getAuthentication(String token) {
+        var id = getUserId(token);
+        var role = getRole(token);
+        var email = getEmail(token);
+        User principal = new User(id, role, email, token);
+        var pr = getPrincipal(token);
+        return new UsernamePasswordAuthenticationToken(principal, token, principal.getAuthorities());
+    }
+
+    private User getPrincipal(String token) {
+        var claims = getTokenBody(token);
+        var id = (long) (int) claims.getOrDefault("id", 1L);
+        var role = Role.valueOf((String) claims.getOrDefault("role", Role.GUEST));
+        var name = (String) claims.getOrDefault("firstName", "");
+        var lastName = (String) claims.getOrDefault("lastName", "");
+        var email = (String) claims.getOrDefault("email", "");
+        var password = (String) claims.getOrDefault("password", "");
+        return User.builder().id(id).firstName(name).lastName(lastName).email(email).password(password).role(role).build();
     }
 
     public Long getUserId(String token) {
         var claims = getTokenBody(token);
-        var id = claims.get("id");
+        var id = claims.getOrDefault("id", 1L);
         return (long) (int) id;
     }
 
-    public String generateToken(User user) {
-        Map<String, Object> map = Map.of(
-                "id",user.getId(),
-                "role", user.getRole(),
-                "firstName", user.getFirstName(),
-                "lastName", user.getLastName(),
-                "email", user.getEmail());
-        return generateToken(map, user);
+    public String getEmail(String token) {
+        var claims = getTokenBody(token);
+        return (String) claims.getOrDefault("email", "");
     }
 
-    public String generateToken(Map<String, Object> extraClaims, User user) {
-        return Jwts.builder()
-                .setClaims(extraClaims)
-                .setSubject(user.getUsername())
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 12))
-                .signWith(getSignKey(), SignatureAlgorithm.HS256)
-                .compact();
+    public Role getRole(String token) {
+        var claims = getTokenBody(token);
+        return Role.valueOf((String) claims.getOrDefault("role", Role.GUEST));
     }
 
     public <T> T extractClaim(String token, Function<Claims, T> claimResolver) {
@@ -87,9 +95,8 @@ public class JwtService {
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public boolean isTokenValid(String token, UserDetails userDetails) {
-        final String email = getEmail(token);
-        return email.equals(userDetails.getUsername()) && !isTokenExpired(token);
+    public boolean isTokenValid(String token) {
+        return !isTokenExpired(token);
     }
 
     private boolean isTokenExpired(String token) {

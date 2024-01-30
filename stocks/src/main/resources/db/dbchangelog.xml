@@ -11,4 +11,8 @@
     <include file="scripts/001_ddl_create_asset_table.sql" relativeToChangelogFile="true"/>
     <include file="scripts/002_ddl_create_balance_tables.sql" relativeToChangelogFile="true"/>
     <include file="scripts/003_ddl_create_portfolio_tables.sql" relativeToChangelogFile="true"/>
+    <include file="scripts/004_ddl_add_asset_id_to_portfolio_asset_table.sql" relativeToChangelogFile="true"/>
+    <include file="scripts/005_ddl_change_data_type.sql" relativeToChangelogFile="true"/>
+    <include file="scripts/006_ddl_rename_column.sql" relativeToChangelogFile="true"/>
+    <include file="scripts/007_rename_asset_history_table.sql" relativeToChangelogFile="true"/>
 </databaseChangeLog>

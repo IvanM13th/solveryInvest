@@ -1,0 +1,1 @@
+alter table portfolio_asset add asset_id bigint references asset;
