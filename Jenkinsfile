@@ -2,10 +2,6 @@ pipeline {
   agent any
   stages {
     stage("build") {
-          script {
-                echo 'Current directory:'
-                sh 'pwd'
-              }
       steps {
         echo 'building the application again...'
       }
