@@ -8,8 +8,8 @@ pipeline {
     }
     stage("test") {
       steps {
-        dir('/var/lib/jenkins/workspace/my-app-pipeline_feature_jenkins/stocks/')
-        sh 'mvn test'
+        echo 'testing the application...'
+        sh 'mvn -f /var/lib/jenkins/workspace/my-app-pipeline_feature_jenkins@2/stocks/pom.xml clean test'
       }
     }
     stage("deploy") {
