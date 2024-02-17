@@ -9,7 +9,7 @@ pipeline {
     stage("test") {
       withMaven(
         maven: Maven) {
-        sh "mvn clean test"
+        sh "mvn -f /var/lib/jenkins/workspace/my-app-pipeline_feature_jenkins/stocks/pom.xml clean test"
         }
     }
     stage("deploy") {
