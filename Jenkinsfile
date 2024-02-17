@@ -13,7 +13,7 @@ pipeline {
     stage("test") {
       steps {
         echo 'testing the application...'
-        dir('/var/lib/jenkins/workspace/my-app-pipeline_feature_jenkins/stocks') {
+        dir('/var/lib/jenkins/workspace/my-app-pipeline_feature_jenkins/stocks/') {
                 sh 'mvn clean test'
         }
       }
