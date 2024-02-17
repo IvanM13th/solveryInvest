@@ -7,10 +7,10 @@ pipeline {
       }
     }
     stage("test") {
-      withMaven(
-        maven: Maven) {
-        sh "mvn -f /var/lib/jenkins/workspace/my-app-pipeline_feature_jenkins@2/stocks/pom.xml clean test"
-        }
+      steps {
+        dir('/var/lib/jenkins/workspace/my-app-pipeline_feature_jenkins/stocks/')
+        sh 'mvn test'
+      }
     }
     stage("deploy") {
       steps {
