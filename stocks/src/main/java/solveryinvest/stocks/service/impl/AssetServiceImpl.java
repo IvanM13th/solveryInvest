@@ -142,7 +142,6 @@ public class AssetServiceImpl implements AssetService, StatementInspector {
                 "Executing SQL query: {}",
                 s
         );
-
         return SQL_COMMENT_PATTERN
                 .matcher(s)
                 .replaceAll("");
