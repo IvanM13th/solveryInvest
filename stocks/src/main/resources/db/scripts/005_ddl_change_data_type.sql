@@ -1,0 +1,1 @@
+alter table portfolio_asset alter column volume type bigint;

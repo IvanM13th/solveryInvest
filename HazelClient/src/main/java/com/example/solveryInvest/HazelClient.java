@@ -23,31 +23,26 @@ import java.util.Objects;
 @Slf4j
 public class HazelClient {
 
-    @PostConstruct
     @Bean
     @SpringSessionHazelcastInstance
     public HazelcastInstance hazelcastInstance() {
-        ClientConfig config = new ClientConfig();
+        HazelcastInstance client = null;
         var url = getClass().getClassLoader().getResource("hazelcast.client.config.yaml");
         if (Objects.nonNull(url)) {
             try {
-                config = new YamlClientConfigBuilder(url).build();
+                var config = new YamlClientConfigBuilder(url).build();
+                config.setClassLoader(HazelClient.class.getClassLoader());
+                client = HazelcastClient.newHazelcastClient(config);
                 SerializerConfig serializerConfig = new SerializerConfig();
                 serializerConfig.setImplementation(new HazelcastSessionSerializer()).setTypeClass(MapSession.class);
                 config.getSerializationConfig().addSerializerConfig(serializerConfig);
-                config.getUserCodeDeploymentConfig().setEnabled(true)
+                config.getUserCodeDeploymentConfig().setEnabled(false)
                         .addClass(MapSession.class)
                         .addClass(SessionUpdateEntryProcessor.class);
             } catch (IOException e) {
                 log.info(e.getMessage());
             }
         }
-        return HazelcastClient.newHazelcastClient(config);
+        return client;
     }
-
-/*
-    public SessionUpdateEntryProcessor sessionUpdateEntryProcessor() {
-        var q = new SessionUpdateEntryProcessor();
-        return new SessionUpdateEntryProcessor();
-    }*/
 }

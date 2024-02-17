@@ -1,5 +1,5 @@
 hazelcast-client:
-  cluster-name: spring-session-cluster
+  cluster-name: auth-cluster
   network:
     cluster-members:
       - localhost:8888

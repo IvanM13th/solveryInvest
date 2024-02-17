@@ -9,7 +9,6 @@ import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.parameters.P;
 import org.springframework.session.MapSession;
 import org.springframework.session.hazelcast.HazelcastIndexedSessionRepository;
 import org.springframework.session.hazelcast.SessionUpdateEntryProcessor;
@@ -35,32 +34,11 @@ public class Session {
 
     @PostConstruct
     public void getSess() {
-       /* IMap<String, MapSession> sessions = hazelcastInstance.getMap(HazelcastIndexedSessionRepository.DEFAULT_SESSION_MAP_NAME);
-        //var sess = sessionRepository.createSession();
-        //sessionRepository.save(sess);
+        var map = hazelcastInstance.getMap("session_map");
+        IMap<String, MapSession> sessionsImap = hazelcastInstance.getMap(HazelcastIndexedSessionRepository.DEFAULT_SESSION_MAP_NAME);
         var user = "6667@555.ru";
-        if (sessionRepository.findByPrincipalName(user).size() > 0) {
-            var map = sessionRepository.findByPrincipalName(user);
-            var keys = map.keySet();
-            for (var k : keys) {
-*//*                for (var entry : sessions.entrySet()) {
-                    if (entry.getKey().equals(k)) {
-                        sessionUpdateEntryProcessor.process(entry);
-                    }
-                }*//*
-                var qwe = sessions.executeOnKey(k, new SessionUpdateEntryProcessor());
-                log.info(k);
-                log.info("found");
-            }
-
-            log.info(map.toString());
-*//*            for (var sess : map.entrySet()) {
-                var id = sess.getKey();
-                //sessionRepository.save(sess);
-                log.info("success");
-            }*//*
-        } else {
-            log.info("Session for user {} has NOT been found", user);
-        }*/
+        var sessions = sessionRepository.findByPrincipalName(user);
+        System.out.println("qwe");
     }
 }
+

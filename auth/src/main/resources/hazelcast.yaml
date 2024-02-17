@@ -1,0 +1,21 @@
+hazelcast:
+  cluster-name: auth-cluster
+  network:
+    port:
+      auto-increment: false
+      port: 8888
+      port-count: 1
+
+  user-code-deployment:
+    enabled: true
+
+
+
+
+
+
+
+
+
+
+

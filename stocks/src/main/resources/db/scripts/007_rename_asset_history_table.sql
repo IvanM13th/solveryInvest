@@ -1,0 +1,1 @@
+alter table portfolio_asset rename to portfolio_asset_history;

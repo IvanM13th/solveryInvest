@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<configuration xmlns="http://www.jooq.org/xsd/jooq-codegen-3.18.0.xsd">
+
+    <jdbc>
+        <driver>org.postgresql.Driver</driver>
+        <url>jdbc:postgresql://127.0.0.1:5433/solvery_invest</url>
+        <!--<url>jdbc:postgresql://127.0.0.1:5442/solvery_invest</url>-->
+        <user>postgres</user>
+        <password>password</password>
+    </jdbc>
+
+    <generator>
+        <name>org.jooq.codegen.JavaGenerator</name>
+
+        <database>
+            <name>solvery_invest</name>
+            <inputSchema>public</inputSchema>
+        </database>
+
+        <target>
+            <packageName>jooq</packageName>
+            <directory>com.example.solveryInvest</directory>
+        </target>
+    </generator>
+</configuration>
