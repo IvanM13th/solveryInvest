@@ -9,7 +9,7 @@ pipeline {
     stage("test") {
       steps {
         echo 'testing the application...'
-        sh 'mvn -f /var/lib/jenkins/workspace/my-app-pipeline_feature_jenkins@2/stocks/pom.xml clean test'
+        sh 'mvn -f /var/lib/jenkins/workspace/my-app-pipeline_feature_jenkins/stocks/pom.xml clean test'
       }
     }
     stage("deploy") {
