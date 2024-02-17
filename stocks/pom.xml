@@ -19,6 +19,13 @@
         <java.version>17</java.version>
     </properties>
 
+    <repositories>
+        <repository>
+            <id>custom-repo</id>
+            <url>https://raw.github.com/gavlyukovskiy/spring-boot-data-source-decorator</url>
+        </repository>
+    </repositories>
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -76,6 +83,11 @@
             <groupId>org.springframework.session</groupId>
             <artifactId>spring-session-hazelcast</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-assembly-plugin</artifactId>
+            <version>3.6.0</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -98,11 +110,30 @@
                 <artifactId>liquibase-maven-plugin</artifactId>
                 <configuration>
                     <driver>org.postgresql.Driver</driver>
-                    <url>jdbc:postgresql://127.0.0.1:5433/solvery_stocks</url>
+                    <url>jdbc:postgresql://127.0.0.1:5452/solvery_stocks</url>
                     <username>postgres</username>
                     <password>password</password>
                     <changeLogFile>src/main/resources/db/dbchangelog.xml</changeLogFile>
                 </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.6.0</version>
+                <configuration>
+                    <descriptors>
+                        <descriptor>src/main/assembly/custom-descriptor.xml</descriptor>
+                    </descriptors>
+                    <finalName>${project.artifactId}</finalName>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

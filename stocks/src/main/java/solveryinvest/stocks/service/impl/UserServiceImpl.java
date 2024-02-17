@@ -2,6 +2,7 @@ package solveryinvest.stocks.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,6 +16,7 @@ import java.util.Collections;
 
 @Service("user-service")
 @RequiredArgsConstructor
+@Slf4j
 public class UserServiceImpl implements UserService {
 
     private final RestTemplate restTemplate;
@@ -24,8 +26,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto findById(User user) {
+        log.info("User id us {}", user.getId());
         var url = String.format("%s%s", userUrl, user.getId());
         var jwt = user.getJwt();
+        log.info("User JWT us {}", jwt);
+        log.info("URL is {}", url);
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", String.format("Bearer %s",jwt));
         headers.setContentType(MediaType.APPLICATION_JSON);

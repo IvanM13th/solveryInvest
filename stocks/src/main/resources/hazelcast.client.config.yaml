@@ -4,6 +4,7 @@ hazelcast-client:
     enabled: true
   network:
     cluster-members:
-      - localhost:8888
+      - auth-app:8888
+      #- localhost:8888
 
 

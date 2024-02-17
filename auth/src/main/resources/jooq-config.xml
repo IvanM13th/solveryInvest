@@ -4,6 +4,7 @@
     <jdbc>
         <driver>org.postgresql.Driver</driver>
         <url>jdbc:postgresql://127.0.0.1:5433/solvery_invest</url>
+        <!--<url>jdbc:postgresql://127.0.0.1:5442/solvery_invest</url>-->
         <user>postgres</user>
         <password>password</password>
     </jdbc>
@@ -18,7 +19,7 @@
 
         <target>
             <packageName>jooq</packageName>
-            <directory>com.example.solveryInves</directory>
+            <directory>com.example.solveryInvest</directory>
         </target>
     </generator>
 </configuration>

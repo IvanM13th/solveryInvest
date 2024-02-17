@@ -16,7 +16,7 @@ import java.util.concurrent.CompletableFuture;
 public class PermissionController {
 
     @GetMapping()
-    public CompletableFuture<ResponseEntity<String>> sayHello() {
+    public CompletableFuture<ResponseEntity<String>> saapiyHello() {
         return CompletableFuture.supplyAsync(() -> "Hello world from secured endpoint")
                 .thenApply(ResponseEntity::ok);
     }

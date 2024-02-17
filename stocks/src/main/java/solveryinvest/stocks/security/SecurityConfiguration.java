@@ -21,9 +21,6 @@ public class SecurityConfiguration {
 
     private final JwtAuthFilter jwtAuthFilter;
 
-    private final JwtService jwtService;
-    private final HazelcastInstance hazelcastInstance;
-
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -33,6 +30,7 @@ public class SecurityConfiguration {
                         //TODO позже убрать эту строку
                         .requestMatchers("/api/balance/**").hasAuthority("GUEST")
                         .requestMatchers("/api/portfolio/**").hasAuthority("GUEST")
+                        .requestMatchers("/api/asset/**").hasAuthority("GUEST")
                 )
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);

@@ -34,7 +34,8 @@ build/
 .vscode/
 
 ### LOGS ###
-/logs/
+/logs
 
 ### PROPERTIES ###
 src/main/resources/application-local.properties
+src/main/resources/application-docker.properties

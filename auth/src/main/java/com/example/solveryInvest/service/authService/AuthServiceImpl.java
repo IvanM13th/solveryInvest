@@ -4,6 +4,7 @@ import com.example.solveryInvest.dto.AuthDto;
 import com.example.solveryInvest.dto.HazelcastUserData;
 import com.example.solveryInvest.dto.UserDto;
 import com.example.solveryInvest.entity.auth.AuthenticationResponse;
+import com.example.solveryInvest.entity.enums.Role;
 import com.example.solveryInvest.exception.AlreadyExistsException;
 import com.example.solveryInvest.security.JwtService;
 import com.example.solveryInvest.service.userService.UserService;
@@ -45,6 +46,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public AuthDto register(HttpServletRequest request, HttpServletResponse response, UserDto userDto) {
         validateEmail(userDto.getEmail());
+        userDto.setRole(Role.GUEST);
         var user = userService.save(userDto);
         var jwtToken = jwtService.generateToken(user);
         AuthenticationResponse.builder().token(jwtToken).build();
@@ -62,7 +64,7 @@ public class AuthServiceImpl implements AuthService {
         );
         var user = userService.findUserByEmail(userDto.getEmail());
         var jwtToken = jwtService.generateToken(user);
-        log.info("User {} with email {} is authenticated", userDto.getFirstName(), userDto.getEmail());
+        log.info("User  email {} is authenticated",  userDto.getEmail());
         putSessionInfoToHazelcast(request, response, jwtToken);
         return AuthDto.builder()
                 .user(modelMapper.map(user, UserDto.class))

@@ -26,9 +26,9 @@ public class SecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         //TODO позже убрать эту строку
+                        .requestMatchers("/api/v1/auth/**").permitAll()
                         .requestMatchers("/api/v1/user/**").hasAuthority("GUEST")
                         .requestMatchers("/api/v1/permit").hasAuthority("GUEST")
-                        .requestMatchers("/api/v1/auth/**").permitAll()
                 )
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
                 .authenticationProvider(authProvider)
