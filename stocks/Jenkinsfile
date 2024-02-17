@@ -7,9 +7,10 @@ pipeline {
       }
     }
     stage("test") {
-      steps {
-        sh 'mvn test'
-      }
+      withMaven(
+        maven: Maven) {
+        sh "mvn clean test"
+        }
     }
     stage("deploy") {
       steps {
