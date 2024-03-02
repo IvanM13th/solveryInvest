@@ -3,12 +3,8 @@ package solveryinvest.stocks.service.impl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.resource.jdbc.spi.StatementInspector;
 import org.modelmapper.ModelMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -33,7 +29,6 @@ import solveryinvest.stocks.service.AssetService;
 
 import java.math.BigDecimal;
 import java.util.*;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static solveryinvest.stocks.filters.AssetFilter.getSpecificationFromFilters;
@@ -42,17 +37,7 @@ import static solveryinvest.stocks.filters.FilterUtils.getSort;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class AssetServiceImpl implements AssetService, StatementInspector {
-
-    private static final Logger LOGGER = LoggerFactory
-            .getLogger(
-                    AssetServiceImpl.class
-            );
-
-    private static final Pattern SQL_COMMENT_PATTERN = Pattern
-            .compile(
-                    "\\/\\*.*?\\*\\/\\s*"
-            );
+public class AssetServiceImpl implements AssetService {
 
     private final ObjectMapper mapper;
 
@@ -120,7 +105,9 @@ public class AssetServiceImpl implements AssetService, StatementInspector {
                 .build();
     }
 
-    private Map<String, BigDecimal> getLastPrices(List<String> figi) {
+    @Override
+    @Transactional
+    public Map<String, BigDecimal> getLastPrices(List<String> figi) {
         var instr = InstrumentDto.builder().instrumentId(figi).build();
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", String.format("Bearer %s", token));
@@ -134,17 +121,5 @@ public class AssetServiceImpl implements AssetService, StatementInspector {
                     .collect(Collectors.toMap(LastPriceDto::getFigi, lastPriceDto -> lastPriceDto.getPrice().getUnits()));
         }
         return priceMap;
-    }
-
-    @Override
-    public String inspect(String s) {
-        LOGGER.debug(
-                "Executing SQL query: {}",
-                s
-        );
-
-        return SQL_COMMENT_PATTERN
-                .matcher(s)
-                .replaceAll("");
     }
 }

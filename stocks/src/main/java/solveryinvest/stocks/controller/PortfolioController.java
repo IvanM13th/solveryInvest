@@ -28,9 +28,16 @@ public class PortfolioController {
     }
 
     @PutMapping
-    public CompletableFuture<ResponseEntity<AssetDto>> updatePortfolio(@RequestParam Long portfolioId,
-                                                                       @RequestBody AssetDto assetDto) {
-        return CompletableFuture.supplyAsync(() -> portfolioService.updatePortfolio(portfolioId, assetDto))
+    public CompletableFuture<ResponseEntity<AssetDto>> updatePortfolio(
+                                                                       @RequestBody AssetDto assetDto,
+                                                                       @AuthenticationPrincipal User user) {
+        return CompletableFuture.supplyAsync(() -> portfolioService.updatePortfolio(user, assetDto))
+                .thenApply(ResponseEntity::ok);
+    }
+
+    @GetMapping
+    public CompletableFuture<ResponseEntity<PortfolioDto>> getPortfolio(@AuthenticationPrincipal User user) {
+        return CompletableFuture.supplyAsync(() -> portfolioService.getByUserId(user))
                 .thenApply(ResponseEntity::ok);
     }
 }

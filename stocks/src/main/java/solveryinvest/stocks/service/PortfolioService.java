@@ -7,7 +7,7 @@ import solveryinvest.stocks.entity.User;
 public interface PortfolioService {
     PortfolioDto createPortfolio(User user, PortfolioDto portfolio);
 
-    AssetDto updatePortfolio(Long portfolioId, AssetDto assetDto);
+    AssetDto updatePortfolio(User user, AssetDto assetDto);
 
     PortfolioDto getByUserId(User user);
 }

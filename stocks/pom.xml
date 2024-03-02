@@ -115,7 +115,7 @@
                 <artifactId>liquibase-maven-plugin</artifactId>
                 <configuration>
                     <driver>org.postgresql.Driver</driver>
-                    <url>jdbc:postgresql://127.0.0.1:5452/solvery_stocks</url>
+                    <url>jdbc:postgresql://127.0.0.1:5433/solvery_stocks</url>
                     <username>postgres</username>
                     <password>password</password>
                     <changeLogFile>src/main/resources/db/dbchangelog.xml</changeLogFile>

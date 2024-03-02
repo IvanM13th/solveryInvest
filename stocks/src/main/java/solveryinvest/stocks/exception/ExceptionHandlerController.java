@@ -52,4 +52,14 @@ public class ExceptionHandlerController {
                 .message(String.format("Service is unavailable \n %s",e.getMessage()))
                 .build();
     }
+
+    @ExceptionHandler({NotEnoughMoneyException.class})
+    public @ResponseBody ExceptionResponseDto handleNotEnoughMoneyException(HttpServletResponse response, Exception e) {
+        response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        return ExceptionResponseDto.builder()
+                .code(HttpServletResponse.SC_BAD_REQUEST)
+                .date(new Date(System.currentTimeMillis()))
+                .message(e.getMessage())
+                .build();
+    }
 }
