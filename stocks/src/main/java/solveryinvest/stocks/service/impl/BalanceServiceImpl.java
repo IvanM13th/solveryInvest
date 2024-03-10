@@ -1,5 +1,7 @@
 package solveryinvest.stocks.service.impl;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.crossstore.ChangeSetPersister;
@@ -45,8 +47,9 @@ public class BalanceServiceImpl implements BalanceService {
                 .user_id(user.getId())
                 .balance(new BigDecimal(0))
                 .build();
-        br.save(balance);
-        return modelMapper.map(balance, BalanceDto.class);
+         br.save(balance);
+        var rsl = modelMapper.map(balance, BalanceDto.class);
+        return rsl;
     }
 
     @Override

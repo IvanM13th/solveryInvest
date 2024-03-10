@@ -2,6 +2,7 @@ package solveryinvest.stocks.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.BeanFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import solveryinvest.stocks.dto.AssetDto;
@@ -65,8 +66,7 @@ public class PortfolioServiceImpl implements PortfolioService {
                 .volume(assetDto.getVolume())
                 .purchasePrice(assetDto.getPurchasePrice())
                 .operationType(type)
-                .build()
-        );
+                .build());
         return assetDto;
     }
 
@@ -88,14 +88,14 @@ public class PortfolioServiceImpl implements PortfolioService {
             var figi = assetDtos.stream().map(AssetDto::getFigi).toList();
             var lastPtices = assetService.getLastPrices(figi);
             for (var asset : assetDtos) {
-                var lotQuanity = lotQuantityMap.get(asset.getFigi());
-                var totalQuantity = lotQuanity * asset.getLots();
+                var lotQuantity = lotQuantityMap.get(asset.getFigi());
+                var totalQuantity = lotQuantity * asset.getLots();
                 var lastPrice = lastPtices.getOrDefault(asset.getFigi(), BigDecimal.ZERO);
                 var volume = BigDecimalsUtils.multiply(asset.getAverage_price(), totalQuantity);
                 var percentage = calculate((((initialPrice, currentPrice) -> BigDecimalsUtils.percentage(initialPrice, currentPrice).doubleValue())),
                         BigDecimalsUtils.subtract(lastPrice, asset.getAverage_price()), asset.getAverage_price());
                 var profit = calculate((((initialPrice, currentPrice) -> BigDecimalsUtils.subtract(currentPrice, initialPrice).doubleValue())),
-                        asset.getAverage_price(), lastPrice) * asset.getLots() * lotQuanity;
+                        asset.getAverage_price(), lastPrice) * asset.getLots() * lotQuantity;
                 var initialValue = BigDecimalsUtils.multiply(asset.getAverage_price(), totalQuantity);
                 var currentValue = BigDecimalsUtils.multiply(lastPrice, totalQuantity);
                 var portfolioShare = calculate((amount, pValue) -> BigDecimalsUtils.percentage(amount, pValue).doubleValue(), volume, portfolioValue);
