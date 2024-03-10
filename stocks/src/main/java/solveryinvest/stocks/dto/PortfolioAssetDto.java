@@ -1,11 +1,13 @@
 package solveryinvest.stocks.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import solveryinvest.stocks.enums.AssetOperationType;
+import solveryinvest.stocks.entity.Asset;
+import solveryinvest.stocks.entity.Portfolio;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
@@ -15,21 +17,25 @@ import java.time.OffsetDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class AssetDto {
+public class PortfolioAssetDto {
+
     private Long id;
-    private String figi;
+
     private String name;
+
     private String ticker;
+
+    private OffsetDateTime lastUpdate;
+
+    private Long portfolioId;
+
+    private Long assetId;
+
     private Long lots;
-    private BigDecimal purchasePrice;
+
     private BigDecimal average_price;
-    private BigDecimal lastPrice;
-    private OffsetDateTime dateTime;
-    private BigDecimal volume;
-    private AssetOperationType type;
-    private BigDecimal initialValue;
-    private BigDecimal currentValue;
+
     private Double roe;
+
     private Double profit;
-    private Double portfolioShare;
 }

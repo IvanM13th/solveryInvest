@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Data
@@ -19,6 +20,9 @@ public class PortfolioDto {
     private Long userId;
 
     private String portfolioName;
+    private Double portfolioRoe;
+    private Double portfolioProfit;
+    private BigDecimal portfolioValue;
 
     private List<AssetDto> assets;
 }

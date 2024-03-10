@@ -15,4 +15,5 @@
     <include file="scripts/005_ddl_change_data_type.sql" relativeToChangelogFile="true"/>
     <include file="scripts/006_ddl_rename_column.sql" relativeToChangelogFile="true"/>
     <include file="scripts/007_rename_asset_history_table.sql" relativeToChangelogFile="true"/>
+    <include file="scripts/008_ddl_create_portfolio_asset_tables.sql" relativeToChangelogFile="true"/>
 </databaseChangeLog>

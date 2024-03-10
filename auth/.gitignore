@@ -33,5 +33,6 @@ build/
 .vscode/
 
 ### LOGS ###
-/logs/
+/auth/logs/log/
 *.logs
+*.log
