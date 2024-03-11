@@ -22,7 +22,7 @@ public class AssetDto {
     private String ticker;
     private Long lots;
     private BigDecimal purchasePrice;
-    private BigDecimal average_price;
+    private BigDecimal averagePrice;
     private BigDecimal lastPrice;
     private OffsetDateTime dateTime;
     private BigDecimal volume;

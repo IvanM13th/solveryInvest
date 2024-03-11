@@ -1,4 +1,4 @@
-package solveryinvest.stocks.dto.TCS;
+package solveryinvest.stocks.dto.tcs;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
@@ -6,13 +6,16 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
+import java.time.OffsetDateTime;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class LastPrices {
-    private List<LastPriceDto> lastPrices;
+public class LastPriceDto {
+    private String figi;
+    private PriceDto price;
+    private OffsetDateTime time;
+    private String instrumentUid;
 }

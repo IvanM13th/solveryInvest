@@ -10,6 +10,7 @@ import org.springframework.session.hazelcast.HazelcastIndexedSessionRepository;
 @Configuration
 public class HazelcastRepository {
     private final HazelcastInstance hazelcastInstance;
+
     @Bean
     public HazelcastIndexedSessionRepository sessionRepository() {
         return new HazelcastIndexedSessionRepository(hazelcastInstance);

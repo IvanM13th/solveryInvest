@@ -49,7 +49,7 @@ public class ExceptionHandlerController {
         return ExceptionResponseDto.builder()
                 .code(HttpServletResponse.SC_BAD_REQUEST)
                 .date(new Date(System.currentTimeMillis()))
-                .message(String.format("Service is unavailable \n %s",e.getMessage()))
+                .message(String.format("Service is unavailable \n %s", e.getMessage()))
                 .build();
     }
 

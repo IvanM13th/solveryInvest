@@ -19,7 +19,6 @@ public class FilterUtils {
     private static final String NAME = "name";
     private static final String PATRONYMIC = "patronymic";
 
-
     public static Pageable getSort(Integer page, Integer pageSize, SortType direction, Supplier<String> dateCreated) {
         Sort sort = Sort.unsorted();
         String fieldStr = dateCreated.get();
@@ -27,14 +26,17 @@ public class FilterUtils {
         if (Objects.equals(direction, SortType.ASC)) {
             if (Objects.equals(SURNAME, fieldStr)) {
                 sort = sortForOfficials(sort, SortType.ASC);
-            } else
+            } else {
                 sort = sort.and(Sort.by(Sort.Order.by(fieldStr).ignoreCase()).ascending());
+            }
+
         }
         if (Objects.equals(direction, SortType.DESC)) {
             if (Objects.equals(SURNAME, fieldStr)) {
                 sort = sortForOfficials(sort, SortType.DESC);
-            } else
+            } else {
                 sort = sort.and(Sort.by(Sort.Order.by(fieldStr).ignoreCase()).descending());
+            }
         }
         return PageRequest.of(page, pageSize, sort);
     }

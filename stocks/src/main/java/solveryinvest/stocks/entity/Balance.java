@@ -20,6 +20,6 @@ public class Balance {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
-    private Long user_id;
+    private Long userId;
     private BigDecimal balance;
 }

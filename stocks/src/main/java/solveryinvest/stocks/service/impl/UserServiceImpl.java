@@ -32,7 +32,7 @@ public class UserServiceImpl implements UserService {
         log.info("User JWT us {}", jwt);
         log.info("URL is {}", url);
         HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", String.format("Bearer %s",jwt));
+        headers.set("Authorization", String.format("Bearer %s", jwt));
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<Void> entity = new HttpEntity<>(headers);
         ResponseEntity<UserDto> response = restTemplate.exchange(url, HttpMethod.GET, entity, UserDto.class);

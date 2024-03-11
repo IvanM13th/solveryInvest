@@ -23,7 +23,7 @@ public class BalanceHistory {
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
     @Column(name = "balance_id")
-    private Long balance_id;
+    private Long balanceId;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "balance_id", insertable = false, updatable = false)
     private Balance balance;

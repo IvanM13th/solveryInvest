@@ -1,10 +1,10 @@
-package solveryinvest.stocks.dto.TCS;
+package solveryinvest.stocks.dto.tcs;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import solveryinvest.stocks.dto.AssetDto;
+import solveryinvest.stocks.entity.Asset;
 
 import java.util.List;
 
@@ -12,7 +12,6 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class InstrumentDto {
-    List<String> instrumentId;
-    List<AssetDto> instruments;
+public class AssetsDto {
+    private List<Asset> instruments;
 }

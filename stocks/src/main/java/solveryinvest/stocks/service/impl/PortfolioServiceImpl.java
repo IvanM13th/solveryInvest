@@ -80,7 +80,7 @@ public class PortfolioServiceImpl implements PortfolioService {
         double portfolioProfit = 0.0;
         List<AssetDto> assetDtos = new ArrayList<>();
         BigDecimal portfolioValue = assets.stream()
-                .map(asset -> BigDecimalsUtils.multiply(asset.getAverage_price(), asset.getLots() * asset.getAsset().getLot()))
+                .map(asset -> BigDecimalsUtils.multiply(asset.getAveragePrice(), asset.getLots() * asset.getAsset().getLot()))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
         if (!assets.isEmpty()) {
             assetDtos = assets.stream()
@@ -91,12 +91,12 @@ public class PortfolioServiceImpl implements PortfolioService {
                 var lotQuantity = lotQuantityMap.get(asset.getFigi());
                 var totalQuantity = lotQuantity * asset.getLots();
                 var lastPrice = lastPtices.getOrDefault(asset.getFigi(), BigDecimal.ZERO);
-                var volume = BigDecimalsUtils.multiply(asset.getAverage_price(), totalQuantity);
+                var volume = BigDecimalsUtils.multiply(asset.getAveragePrice(), totalQuantity);
                 var percentage = calculate((((initialPrice, currentPrice) -> BigDecimalsUtils.percentage(initialPrice, currentPrice).doubleValue())),
-                        BigDecimalsUtils.subtract(lastPrice, asset.getAverage_price()), asset.getAverage_price());
+                        BigDecimalsUtils.subtract(lastPrice, asset.getAveragePrice()), asset.getAveragePrice());
                 var profit = calculate((((initialPrice, currentPrice) -> BigDecimalsUtils.subtract(currentPrice, initialPrice).doubleValue())),
-                        asset.getAverage_price(), lastPrice) * asset.getLots() * lotQuantity;
-                var initialValue = BigDecimalsUtils.multiply(asset.getAverage_price(), totalQuantity);
+                        asset.getAveragePrice(), lastPrice) * asset.getLots() * lotQuantity;
+                var initialValue = BigDecimalsUtils.multiply(asset.getAveragePrice(), totalQuantity);
                 var currentValue = BigDecimalsUtils.multiply(lastPrice, totalQuantity);
                 var portfolioShare = calculate((amount, pValue) -> BigDecimalsUtils.percentage(amount, pValue).doubleValue(), volume, portfolioValue);
                 asset.setLastPrice(lastPrice);
@@ -120,7 +120,9 @@ public class PortfolioServiceImpl implements PortfolioService {
 
     private void validateSinglePortfolio(User user) {
         var portfolio = pr.findByUserId(user.getId());
-        if (portfolio.isPresent()) throw new AlreadyExistsException("Portfolio for this user already exists");
+        if (portfolio.isPresent()) {
+            throw new AlreadyExistsException("Portfolio for this user already exists");
+        }
     }
 
     private void validateBalance(List<PortfolioAsset> portfolioAssets, Balance balance, AssetDto assetDto) {

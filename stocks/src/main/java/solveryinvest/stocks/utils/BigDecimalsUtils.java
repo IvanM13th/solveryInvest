@@ -33,6 +33,8 @@ public class BigDecimalsUtils {
 
     public static void validateBalance(BigDecimal balance) {
         var value = balance.compareTo(BigDecimal.ZERO);
-        if (value < 0) throw new NotEnoughMoneyException("Not enough money");
+        if (value < 0) {
+            throw new NotEnoughMoneyException("Not enough money");
+        }
     }
 }

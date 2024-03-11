@@ -1,4 +1,4 @@
-package solveryinvest.stocks.utils.firstRun;
+package solveryinvest.stocks.utils.firstrun;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;

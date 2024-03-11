@@ -1,4 +1,4 @@
-package solveryinvest.stocks.modelMapper;
+package solveryinvest.stocks.modelmapper;
 
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -7,13 +7,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import solveryinvest.stocks.dto.AssetDto;
 import solveryinvest.stocks.dto.BalanceDto;
-import solveryinvest.stocks.dto.PortfolioAssetDto;
 import solveryinvest.stocks.dto.PortfolioDto;
 import solveryinvest.stocks.entity.Asset;
 import solveryinvest.stocks.entity.Balance;
 import solveryinvest.stocks.entity.Portfolio;
 import solveryinvest.stocks.entity.PortfolioAsset;
-
 
 @Configuration("model_mapper_producer")
 @RequiredArgsConstructor
