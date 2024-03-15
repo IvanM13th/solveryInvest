@@ -44,6 +44,4 @@ public class HazelcastClientInstance {
         }
         return client;
     }
-
-
 }

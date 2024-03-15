@@ -1,34 +1,25 @@
 package solveryinvest.stocks.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
-import org.mockito.internal.matchers.Any;
-import org.mockito.junit.MockitoJUnit;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import solveryinvest.stocks.dto.BalanceDto;
 import solveryinvest.stocks.dto.UserDto;
 import solveryinvest.stocks.entity.Balance;
-import solveryinvest.stocks.entity.BalanceHistory;
 import solveryinvest.stocks.entity.User;
 import solveryinvest.stocks.enums.OperationType;
 import solveryinvest.stocks.exception.AlreadyExistsException;
 import solveryinvest.stocks.exception.NotEnoughMoneyException;
 import solveryinvest.stocks.exception.NotFoundException;
-import solveryinvest.stocks.modelMapper.ModelMapperProducer;
 import solveryinvest.stocks.repository.BalanceRepository;
 import solveryinvest.stocks.service.BalanceHistoryService;
 import solveryinvest.stocks.service.BalanceService;
 import solveryinvest.stocks.service.UserService;
 
 import java.math.BigDecimal;
-import java.time.OffsetDateTime;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -55,12 +46,12 @@ class BalanceServiceImplTest {
     private static final UserDto userDto = UserDto.builder().id(1L).email("123@321.ru").build();
 
     private static final Balance newBalance = Balance.builder()
-            .user_id(user.getId())
+            .userId(user.getId())
             .balance(new BigDecimal(0))
             .build();
 
     private static final Balance newSavedBalance = Balance.builder()
-            .user_id(1L)
+            .userId(1L)
             .id(1L)
             .balance(new BigDecimal(0))
             .build();

@@ -1,4 +1,4 @@
-package solveryinvest.stocks.dto.TCS;
+package solveryinvest.stocks.dto.tcs;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
@@ -6,14 +6,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
+import java.util.List;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class PriceDto {
-    private BigDecimal units;
-    private Long nano;
+public class LastPrices {
+    private List<LastPriceDto> lastPrices;
 }

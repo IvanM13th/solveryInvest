@@ -33,7 +33,7 @@ public class PortfolioAssetDto {
 
     private Long lots;
 
-    private BigDecimal average_price;
+    private BigDecimal averagePrice;
 
     private Double roe;
 

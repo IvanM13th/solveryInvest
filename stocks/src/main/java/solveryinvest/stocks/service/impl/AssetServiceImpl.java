@@ -16,10 +16,10 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import solveryinvest.stocks.dto.AssetDto;
 import solveryinvest.stocks.dto.PageDto;
-import solveryinvest.stocks.dto.TCS.AssetsDto;
-import solveryinvest.stocks.dto.TCS.InstrumentDto;
-import solveryinvest.stocks.dto.TCS.LastPriceDto;
-import solveryinvest.stocks.dto.TCS.LastPrices;
+import solveryinvest.stocks.dto.tcs.AssetsDto;
+import solveryinvest.stocks.dto.tcs.InstrumentDto;
+import solveryinvest.stocks.dto.tcs.LastPriceDto;
+import solveryinvest.stocks.dto.tcs.LastPrices;
 import solveryinvest.stocks.entity.Asset;
 import solveryinvest.stocks.filters.FilterList;
 import solveryinvest.stocks.filters.SortFields;
@@ -48,7 +48,7 @@ public class AssetServiceImpl implements AssetService {
     private final ModelMapper modelMapper;
 
     @Value("${t.get.all}")
-    private String url_getAll;
+    private String urlGetAll;
 
     @Value("${t.token}")
     private String token;
@@ -72,7 +72,7 @@ public class AssetServiceImpl implements AssetService {
             map.add("instrumentStatus", statusBase);
             HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
             try {
-                ResponseEntity<String> response = restTemplate.postForEntity(url_getAll, request, String.class);
+                ResponseEntity<String> response = restTemplate.postForEntity(urlGetAll, request, String.class);
                 if (Objects.nonNull(response.getBody())) {
                     var assets = mapper.readValue(response.getBody(), AssetsDto.class).getInstruments();
                     assetsRepository.saveAll(assets);
@@ -87,7 +87,9 @@ public class AssetServiceImpl implements AssetService {
     @Transactional
     public PageDto<AssetDto> findAllByFilters(List<FilterList> filters, Integer page, Integer pageSize, String field, SortType direction) {
         final var pageable = getSort(page, pageSize, direction, () -> String.valueOf(sortFields.getOrDefault(field, SortFields.name)));
-        if (Objects.isNull(filters)) filters = new ArrayList<>();
+        if (Objects.isNull(filters)) {
+            filters = new ArrayList<>();
+        }
         final var spec = getSpecificationFromFilters(filters);
         final var assets = assetsRepository.findAll(spec, pageable);
         var priceMap = getLastPrices(assets.stream().map(Asset::getFigi).toList());

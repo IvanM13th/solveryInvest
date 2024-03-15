@@ -12,6 +12,7 @@ import java.util.Map;
 public interface AssetService {
 
     void getAssetsWhenAppStarts();
+
     PageDto<AssetDto> findAllByFilters(List<FilterList> filters, Integer page, Integer pageSize, String field, SortType direction);
 
     Map<String, BigDecimal> getLastPrices(List<String> figi);

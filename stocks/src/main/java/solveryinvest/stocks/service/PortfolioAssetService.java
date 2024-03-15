@@ -9,7 +9,6 @@ public interface PortfolioAssetService {
 
     void updateAssetsInPortfolio(List<PortfolioAsset> portfolioAssets, Long pfId, AssetDto assetDto);
 
-
     List<PortfolioAsset> findByPortfolioId(Long portfolioId);
 
     void validateAssetInPortfolio(List<PortfolioAsset> portfolioAssets, Long assetId, Long lots);

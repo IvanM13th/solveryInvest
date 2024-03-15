@@ -53,7 +53,9 @@ public class PortfolioAssetServiceImpl implements PortfolioAssetService {
             throw new NotFoundException("В портфеле актив для продажи не найден");
         } else {
             var asset = assetMap.get(assetId);
-            if (asset.getLots() < lots) throw new NotFoundException("В портфеле недостаточно активов для продажи");
+            if (asset.getLots() < lots) {
+                throw new NotFoundException("В портфеле недостаточно активов для продажи");
+            }
         }
     }
 
@@ -65,19 +67,19 @@ public class PortfolioAssetServiceImpl implements PortfolioAssetService {
                     .assetId(assetDto.getId())
                     .lastUpdate(OffsetDateTime.now(Clock.systemUTC()))
                     .lots(assetDto.getLots())
-                    .average_price(assetDto.getPurchasePrice())
+                    .averagePrice(assetDto.getPurchasePrice())
                     .build();
         } else {
             pa = assetMap.get(assetDto.getId());
             var oldCount = pa.getLots();
-            var averagePriceOld = pa.getAverage_price();
+            var averagePriceOld = pa.getAveragePrice();
             var bought = assetDto.getLots();
             var assetAveragePrice = assetDto.getPurchasePrice();
             var numerator = BigDecimalsUtils.add(BigDecimalsUtils.multiply(averagePriceOld, oldCount), (BigDecimalsUtils.multiply(assetAveragePrice, bought)));
             var denominator = oldCount + bought;
             var updatedAverage = BigDecimalsUtils.division(numerator, BigDecimal.valueOf(denominator));
             pa.setLastUpdate(OffsetDateTime.now(Clock.systemUTC()));
-            pa.setAverage_price(updatedAverage);
+            pa.setAveragePrice(updatedAverage);
             pa.setLots(denominator);
         }
         par.save(pa);
@@ -88,6 +90,8 @@ public class PortfolioAssetServiceImpl implements PortfolioAssetService {
         pa.setLots(pa.getLots() - assetDto.getLots());
         if (pa.getLots() == 0) {
             par.delete(pa);
-        } else par.save(pa);
+        } else {
+            par.save(pa);
+        }
     }
 }

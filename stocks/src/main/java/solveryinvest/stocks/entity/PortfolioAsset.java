@@ -38,5 +38,5 @@ public class PortfolioAsset {
 
     private Long lots;
 
-    private BigDecimal average_price;
+    private BigDecimal averagePrice;
 }

@@ -33,6 +33,7 @@ public class User implements UserDetails, Serializable {
     public User(Long id) {
         super();
     }
+
     public User(Long userId, Role role, String email, String jwt) {
         this.id = userId;
         this.role = role;
@@ -44,6 +45,7 @@ public class User implements UserDetails, Serializable {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));
     }
+
     public Long getId() {
         return id;
     }

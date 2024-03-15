@@ -44,7 +44,7 @@ public class BalanceServiceImpl implements BalanceService {
         var userDto = userService.findById(user);
         checkIfBalanceExists(user.getId());
         var balance = Balance.builder()
-                .user_id(user.getId())
+                .userId(user.getId())
                 .balance(new BigDecimal(0))
                 .build();
          br.save(balance);
@@ -75,7 +75,7 @@ public class BalanceServiceImpl implements BalanceService {
         balance.setBalance(newValue);
         validateBalance(balance.getBalance());
         bhr.save(BalanceHistory.builder()
-                .balance_id(balance.getId()).dateTime(OffsetDateTime.now()).amount(amount).operationType(type)
+                .balanceId(balance.getId()).dateTime(OffsetDateTime.now()).amount(amount).operationType(type)
                 .build());
         return modelMapper.map(balance, BalanceDto.class);
     }
@@ -90,7 +90,7 @@ public class BalanceServiceImpl implements BalanceService {
             balance.setBalance(add(balance.getBalance(), volume));
         }
         bhr.save(BalanceHistory.builder()
-                .balance_id(balance.getId()).dateTime(OffsetDateTime.now()).amount(volume).operationType(balanceOperationType)
+                .balanceId(balance.getId()).dateTime(OffsetDateTime.now()).amount(volume).operationType(balanceOperationType)
                 .build());
     }
 
@@ -102,8 +102,10 @@ public class BalanceServiceImpl implements BalanceService {
 
     private void checkIfBalanceExists(Long userId) {
         var balance = br.findByUserId(userId);
-        if (balance.isPresent())
+        if (balance.isPresent()) {
             throw new AlreadyExistsException(String.format("Balance for user with id %s already exists", userId));
+        }
+
     }
 
     private BigDecimal getNewBalanceValue(BigDecimal value1, BigDecimal value2, OperationType operationType) {

@@ -15,6 +15,6 @@ import java.math.BigDecimal;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class BalanceDto {
     private Long id;
-    private Long user_id;
+    private Long userId;
     private BigDecimal balance;
 }
